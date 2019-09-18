@@ -1,6 +1,7 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Course;
+import com.mycompany.myapp.domain.UserCourse;
 import com.mycompany.myapp.domain.dto.CourseDto;
 import com.mycompany.myapp.domain.dto.CourseWithTNDto;
 import com.mycompany.myapp.service.CourseService;
@@ -26,6 +27,13 @@ public class CourseController {
     public HttpEntity<List<CourseDto>> findAllCourses(){
 
         List<CourseDto> allCourses = courseService.findAllCourses();
+
+        return new ResponseEntity<>(allCourses, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/api/course/findAllCoursesWithCourseNameLongerThan/{length}", produces = "application/json")
+    public HttpEntity<List<CourseDto>> findAllCoursesWithCourseNameLongerThan(@PathVariable Integer length) {
+        List<CourseDto> allCourses = courseService.findAllCoursesWithNameLongerThan(length);
 
         return new ResponseEntity<>(allCourses, HttpStatus.OK);
     }
@@ -94,13 +102,13 @@ public class CourseController {
         }
     }
 
-    @PostMapping(path = "/api/course/addCourseToStudent/{courseName}", produces = "application/js")
-    public HttpStatus addCourseToStudent(@NotNull @PathVariable("courseName") UserCourse userCourse) {
-        try {
-            courseService.addCourseToStudent(userCourse);
-            return HttpStatus.OK;
-        } catch (Exception e) {
-            return HttpStatus.BAD_REQUEST;
-        }
-    }
+//    @PostMapping(path = "/api/course/addCourseToStudent/{courseName}", produces = "application/js")
+//    public HttpStatus addCourseToStudent(@NotNull @PathVariable("courseName") UserCourse userCourse) {
+//        try {
+//            courseService.addCourseToStudent(userCourse);
+//            return HttpStatus.OK;
+//        } catch (Exception e) {
+//            return HttpStatus.BAD_REQUEST;
+//        }
+//    }
 }
