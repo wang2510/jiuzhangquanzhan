@@ -1,6 +1,3 @@
-export interface CourseDto {
-    courseName: string;
-    courseLocation: string;
-    courseContent: string;
-    courseTeacher: string;
+export class CourseDto {
+    constructor(public courseName: string, public courseLocation: string, public courseContent: string, public teacherId: number) {}
 }

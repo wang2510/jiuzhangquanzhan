@@ -7,14 +7,12 @@ import com.mycompany.myapp.domain.dto.CourseDto;
 import com.mycompany.myapp.domain.dto.CourseWithTNDto;
 import com.mycompany.myapp.repository.CourseRepository;
 import com.mycompany.myapp.repository.UserCourseRepository;
-import org.checkerframework.checker.units.qual.A;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,16 +33,20 @@ public class CourseService {
     public List<CourseDto> findAllCourses() {
 
         //Cache
-        if (courseDtos.isEmpty()) {
-            List<Course> courses = courseRepository.findAll();
+        List<Course> courses = courseRepository.findAll();
 
-            for (Course c : courses) {
-                courseDtos.add(new CourseDto(c.getCourseName(), c.getCourseLocation(), c.getCourseContent(), c.getTeacherId()));
-            }
-
-            return courseDtos;
+        for (Course c : courses) {
+            courseDtos.add(new CourseDto(c.getCourseName(), c.getCourseLocation(), c.getCourseContent(), c.getTeacherId()));
         }
 
+        return courseDtos;
+    }
+
+    public List<CourseDto> findCoursesLengthLargeThanTen() {
+        if (courseDtos.isEmpty()) {
+            List<CourseDto> courseDtos = courseRepository.findCourseLengthLargeThanTen();
+            return courseDtos;
+        }
         return courseDtos;
     }
 
@@ -54,6 +56,17 @@ public class CourseService {
 
     public List<CourseWithTNDto> findAllCoursesDtoWithTeacherNameFromDB(){
         return courseRepository.findAllCoursesDtoWithTeacherName();
+    }
+
+    public List<CourseDto> findRegisteredCourses() {
+        List<UserCourse> courses = userCourseRepository.findAll();
+        List<CourseDto> userCourses = new LinkedList<>();
+        for(UserCourse uc : courses) {
+            userCourses.add(new CourseDto(uc.getCourse().getCourseName(),
+                uc.getCourse().getCourseLocation(), uc.getCourse().getCourseContent(),
+                uc.getCourse().getTeacherId()));
+        }
+        return userCourses;
     }
 
 
@@ -107,6 +120,22 @@ public class CourseService {
         }
     }
 
+    public void unregisterCourse(String courseName) throws Exception {
+        Optional<User> curUser = userService.getUserWithAuthorities();
+        Optional<Course> curCourse = courseRepository.findCourseByCourseName(courseName);
+        Optional<UserCourse> curUserCourse = userCourseRepository.findUserCourseByCourse(curCourse.get());
+
+        if(!curCourse.isPresent() || !curUserCourse.isPresent()) {
+            throw new Exception("Course is not exist");
+        }
+
+        try {
+            userCourseRepository.delete(curUserCourse.get());
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
 
     public void updateCourse(CourseDto course) throws Exception{
         Optional<Course> OptionalExistingCourse = courseRepository.findCourseByCourseName(course.getCourseName());
@@ -123,21 +152,21 @@ public class CourseService {
 
     }
 
-    public void addCourseToStudent(UserCourse userCourse) throws Exception {
+//    public void addCourseToStudent(UserCourse userCourse) throws Exception {
 
-        Optional<User> curUser = userService.getUserWithAuthorities();
+//        Optional<User> curUser = userService.getUserWithAuthorities();
         // 2 find course from course table
 
 
-        UserCourse t1 =  UserCourse.builder()
-            .course(c1)
-            .user(curUser)
-            .build();
+//        UserCourse t1 =  UserCourse.builder()
+//            .course(c1)
+//            .user(curUser)
+//            .build();
 
-        try {
-            UserCourseRepository.saveAndFlush(t1);
-        } catch (Exception e){
-            throw new Exception(e.getMessage());
-        }
-    }
+//        try {
+//            UserCourseRepository.saveAndFlush(t1);
+//        } catch (Exception e){
+//            throw new Exception(e.getMessage());
+//        }
+//    }
 }

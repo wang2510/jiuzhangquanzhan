@@ -1,11 +1,9 @@
 package com.mycompany.myapp.web.rest;
 
-import com.mycompany.myapp.domain.Course;
 import com.mycompany.myapp.domain.dto.CourseDto;
 import com.mycompany.myapp.domain.dto.CourseWithTNDto;
 import com.mycompany.myapp.service.CourseService;
 import io.swagger.annotations.Api;
-import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -37,11 +35,24 @@ public class CourseController {
         return new ResponseEntity<>(allCourses, HttpStatus.OK);
     }
 
+    @GetMapping(path = "/api/course/findCoursesDtoLargerThanTen", produces = "application/json")
+    public HttpEntity<List<CourseDto>> findCoursesDtoLargerThanTen() {
+        List<CourseDto> allCoursesLargerThanTen = courseService.findCoursesLengthLargeThanTen();
+
+        return new ResponseEntity<>(allCoursesLargerThanTen, HttpStatus.OK);
+    }
+
     @GetMapping(path = "/api/course/findAllCoursesWithTNDto", produces = "application/json")
     public HttpEntity<List<CourseWithTNDto>> findAllCoursesWithTNDto(){
         List<CourseWithTNDto> allCourses = courseService.findAllCoursesDtoWithTeacherNameFromDB();
 
         return new ResponseEntity<>(allCourses, HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/api/course/findRegisteredCourses", produces = "application/json")
+    public HttpEntity<List<CourseDto>> findRegisteredCourses() {
+        List<CourseDto> courses = courseService.findRegisteredCourses();
+        return new ResponseEntity<>(courses, HttpStatus.OK);
     }
 
     @PostMapping(path = "/api/course/registerCourse/{courseName}", produces = "application/json")
@@ -94,13 +105,23 @@ public class CourseController {
         }
     }
 
-    @PostMapping(path = "/api/course/addCourseToStudent/{courseName}", produces = "application/js")
-    public HttpStatus addCourseToStudent(@NotNull @PathVariable("courseName") UserCourse userCourse) {
+    @DeleteMapping(path = "/api/course/unregisterCourse/{courseName}", produces = "application/js")
+    public HttpStatus unregisteredCourse(@NotNull @PathVariable("courseName") String courseName) {
         try {
-            courseService.addCourseToStudent(userCourse);
+            courseService.unregisterCourse(courseName);
             return HttpStatus.OK;
         } catch (Exception e) {
             return HttpStatus.BAD_REQUEST;
         }
     }
+
+//    @PostMapping(path = "/api/course/addCourseToStudent/{courseName}", produces = "application/js")
+//   public HttpStatus addCourseToStudent(@NotNull @PathVariable("courseName") UserCourse userCourse) {
+//        try {
+//            courseService.addCourseToStudent(userCourse);
+//            return HttpStatus.OK;
+//        } catch (Exception e) {
+//            return HttpStatus.BAD_REQUEST;
+//        }
+//    }
 }

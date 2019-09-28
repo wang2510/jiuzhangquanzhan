@@ -26,6 +26,14 @@ export class HomeComponent implements OnInit {
 
     courses: CourseDto[] = [];
 
+    registeredCourses: CourseDto[] = [];
+
+    courseName: string;
+    courseLocation: string;
+    courseContent: string;
+    teacherId: number;
+    course: CourseDto;
+
     coursesWithTN: CourseWithTNDto[] = [];
 
     ngOnInit() {
@@ -72,12 +80,71 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    // registerCourse(courseName) {
-    //
-    // }
+    getRegisteredCourse() {
+        debugger;
+        this.courseService.getRegisteredCourseInfo().subscribe(curDto => {
+            this.registeredCourses = curDto;
+        });
+    }
+
+    addNewCourse() {
+        debugger;
+        this.course = new CourseDto(this.courseName, this.courseLocation, this.courseContent, this.teacherId);
+        this.courseService.add(this.course).subscribe(
+            data => {
+                console.log('DELETE Request is successful ', data);
+            },
+            error => {
+                console.log('Error', error);
+            }
+        );
+        if (this.courses && this.courses.length != 0) {
+            this.courses.push(this.course);
+        }
+    }
+
+    deleteCourse(courseName, i) {
+        this.courseService.delete(courseName).subscribe(
+            data => {
+                console.log('DELETE Request is successful ', data);
+            },
+            error => {
+                console.log('Error', error);
+            }
+        );
+        this.courses.splice(i, 1);
+    }
+
+    registerCourse(courseName) {
+        debugger;
+        this.courseService.register(courseName).subscribe(
+            data => {
+                console.log('DELETE Request is successful ', data);
+            },
+            error => {
+                console.log('Error', error);
+            }
+        );
+    }
+
+    unregisterCourse(courseName, i) {
+        this.courseService.unregister(courseName).subscribe(
+            data => {
+                console.log('DELETE Request is successful ', data);
+            },
+            error => {
+                console.log('Error', error);
+            }
+        );
+        this.registeredCourses.splice(i, 1);
+    }
 
     clearAllCourses() {
         this.courses = [];
+    }
+
+    clearRegisteredCourses() {
+        this.registeredCourses = [];
     }
 
     addCourseToStudent() {
