@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
     courseName: string;
     courseLocation: string;
     courseContent: string;
-    teacherId: number;
+    teacherId: string;
     course: CourseDto;
 
     coursesWithTN: CourseWithTNDto[] = [];
@@ -101,6 +101,10 @@ export class HomeComponent implements OnInit {
         if (this.courses && this.courses.length != 0) {
             this.courses.push(this.course);
         }
+        this.courseName = '';
+        this.courseLocation = '';
+        this.courseContent = '';
+        this.teacherId = '';
     }
 
     deleteCourse(courseName, i) {
