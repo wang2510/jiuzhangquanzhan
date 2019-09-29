@@ -49,14 +49,6 @@ public class CourseService {
     }
 
     public List<CourseDto> findAllCoursesWithNameLongerThan(Integer length) {
-//        List<CourseDto> courseDtos = new ArrayList<>();
-//
-//        List<Course> courses= courseRepository.
-//
-//        for (Course c : courses) {
-//            courseDtos.add(new CourseDto(c.getCourseName(), c.getCourseLocation(), c.getCourseContent(), c.getTeacherId()));
-//        }
-
         return courseRepository.findAllCoursesWithCourseNameLongerThan(length);
     }
 

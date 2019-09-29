@@ -15,7 +15,11 @@ import { CourseWithTNDto } from 'app/shared/model/courseWithTN-dto.model';
 export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
+    newCourse: CourseDto = new CourseDto();
     classeNameNeedToReg: string;
+    courseNameToDelete: string;
+    courses: CourseDto[] = [];
+    coursesWithTN: CourseWithTNDto[] = [];
 
     constructor(
         private principal: Principal,
@@ -23,10 +27,6 @@ export class HomeComponent implements OnInit {
         private eventManager: JhiEventManager,
         private courseService: CourseService
     ) {}
-
-    courses: CourseDto[] = [];
-
-    coursesWithTN: CourseWithTNDto[] = [];
 
     ngOnInit() {
         this.principal.identity().then(account => {
@@ -52,7 +52,7 @@ export class HomeComponent implements OnInit {
     }
 
     getAllCourses() {
-        debugger;
+        // debugger;
         this.courseService.getCourseInfo().subscribe(curDto => {
             if (!curDto) {
                 this.courses = [];
@@ -72,16 +72,29 @@ export class HomeComponent implements OnInit {
         });
     }
 
-    // registerCourse(courseName) {
-    //
-    // }
+    addNewCourse() {
+        console.log('You are in Add function!!!');
+        this.courseService.addCourse(this.newCourse).subscribe();
+        this.newCourse = new CourseDto();
+        this.getAllCourses();
+    }
+
+    deleteCourseWithName() {
+        this.courseService.delete(this.courseNameToDelete).subscribe();
+        this.courseNameToDelete = '';
+        this.getAllCourses();
+    }
 
     clearAllCourses() {
         this.courses = [];
     }
 
-    addCourseToStudent() {
-        const courseName = 'temp';
-        this.courseService.addCourseToStudent(courseName, currentUserCredential);
+    clearAllCoursesWithTN() {
+        this.coursesWithTN = [];
     }
+
+    // addCourseToStudent() {
+    //     const courseName = 'temp';
+    //     this.courseService.addCourseToStudent(courseName, currentUserCredential);
+    // }
 }
