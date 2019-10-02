@@ -17,7 +17,6 @@ export class HomeComponent implements OnInit {
     modalRef: NgbModalRef;
     newCourse: CourseDto = new CourseDto();
     classeNameNeedToReg: string;
-    courseNameToDelete: string;
     courses: CourseDto[] = [];
     coursesWithTN: CourseWithTNDto[] = [];
 
@@ -73,16 +72,13 @@ export class HomeComponent implements OnInit {
     }
 
     addNewCourse() {
-        console.log('You are in Add function!!!');
         this.courseService.addCourse(this.newCourse).subscribe();
-        this.newCourse = new CourseDto();
-        this.getAllCourses();
+        this.courses.push(this.newCourse);
     }
 
-    deleteCourseWithName() {
-        this.courseService.delete(this.courseNameToDelete).subscribe();
-        this.courseNameToDelete = '';
-        this.getAllCourses();
+    deleteCourseWithName(courseNameToDelete, i) {
+        this.courseService.delete(courseNameToDelete).subscribe();
+        this.courses.splice(i, 1);
     }
 
     clearAllCourses() {
@@ -93,6 +89,9 @@ export class HomeComponent implements OnInit {
         this.coursesWithTN = [];
     }
 
+    registerCourse(courseName: string) {
+        this.courseService.registerCourse(courseName).subscribe();
+    }
     // addCourseToStudent() {
     //     const courseName = 'temp';
     //     this.courseService.addCourseToStudent(courseName, currentUserCredential);
