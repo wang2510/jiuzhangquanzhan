@@ -3,9 +3,11 @@ package com.mycompany.myapp.web.rest;
 import com.mycompany.myapp.domain.Course;
 import com.mycompany.myapp.domain.UserCourse;
 import com.mycompany.myapp.domain.dto.CourseDto;
+import com.mycompany.myapp.domain.Course;
 import com.mycompany.myapp.domain.dto.CourseWithTNDto;
 import com.mycompany.myapp.security.AuthoritiesConstants;
 import com.mycompany.myapp.service.CourseService;
+import com.netflix.ribbon.proxy.annotation.Http;
 import io.swagger.annotations.Api;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -53,6 +56,17 @@ public class CourseController {
 
         return new ResponseEntity<>(allCourses, HttpStatus.OK);
     }
+
+    @GetMapping(path = "/api/course/getRegisteredCourse", produces = "application/json")
+    public HttpEntity<List<Course>> findAllRegisteredCourses() {
+        List<UserCourse> allRegisterCoursesBundle = courseService.findAllUserCoursesWithUser();
+        List<Course> allRegisteredCourses = new ArrayList<Course>();
+        for (UserCourse uc : allRegisterCoursesBundle) {
+            allRegisteredCourses.add(uc.getCourse());
+        }
+        return new ResponseEntity<>(allRegisteredCourses, HttpStatus.OK);
+    }
+
 
     @PostMapping(path = "/api/course/registerCourse/{courseName}", produces = "application/json")
     public HttpStatus registerCourse(@PathVariable String courseName) {
