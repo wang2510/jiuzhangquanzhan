@@ -60,9 +60,15 @@ public class CourseService {
         return courseRepository.findAllCoursesDtoWithTeacherName();
     }
 
-    public List<UserCourse> findAllUserCoursesWithUser() {
+    public List<CourseDto> findAllUserCoursesWithUser() {
         Optional<User> curUser = userService.getUserWithAuthorities();
-        return userCourseRepository.findUserCoursesByUser(curUser.get());
+        List<UserCourse> tmp = userCourseRepository.findUserCoursesByUser(curUser.get());
+        List<CourseDto> list = new ArrayList<>();
+        for (UserCourse uc : tmp) {
+            Course c = uc.getCourse();
+            list.add(new CourseDto(c.getCourseName(), c.getCourseLocation(), c.getCourseContent(), c.getTeacherId()));
+        }
+        return list;
     }
 
     public void registerCourse(String courseName) throws Exception{

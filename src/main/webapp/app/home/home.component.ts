@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
     newCourse: CourseDto = new CourseDto();
     classeNameNeedToReg: string;
     courses: CourseDto[] = [];
+    registeredCourses: CourseDto[] = [];
     coursesWithTN: CourseWithTNDto[] = [];
 
     constructor(
@@ -71,6 +72,16 @@ export class HomeComponent implements OnInit {
         });
     }
 
+    getAllRegisteredCourses() {
+        this.courseService.getRegisteredCourses().subscribe(curDto => {
+            if (!curDto) {
+                this.registeredCourses = [];
+            } else {
+                this.registeredCourses = curDto;
+            }
+        });
+    }
+
     addNewCourse() {
         this.courseService.addCourse(this.newCourse).subscribe();
         this.courses.push(this.newCourse);
@@ -85,8 +96,8 @@ export class HomeComponent implements OnInit {
         this.courses = [];
     }
 
-    clearAllCoursesWithTN() {
-        this.coursesWithTN = [];
+    clearAllRegisteredCourses() {
+        this.registeredCourses = [];
     }
 
     registerCourse(courseName: string) {

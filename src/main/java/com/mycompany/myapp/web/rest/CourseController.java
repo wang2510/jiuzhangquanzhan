@@ -57,13 +57,11 @@ public class CourseController {
         return new ResponseEntity<>(allCourses, HttpStatus.OK);
     }
 
+    @Secured(AuthoritiesConstants.USER)
     @GetMapping(path = "/api/course/getRegisteredCourse", produces = "application/json")
-    public HttpEntity<List<Course>> findAllRegisteredCourses() {
-        List<UserCourse> allRegisterCoursesBundle = courseService.findAllUserCoursesWithUser();
-        List<Course> allRegisteredCourses = new ArrayList<Course>();
-        for (UserCourse uc : allRegisterCoursesBundle) {
-            allRegisteredCourses.add(uc.getCourse());
-        }
+    public HttpEntity<List<CourseDto>> findAllRegisteredCourses() {
+        List<CourseDto> allRegisteredCourses = courseService.findAllUserCoursesWithUser();
+
         return new ResponseEntity<>(allRegisteredCourses, HttpStatus.OK);
     }
 
