@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
     account: Account;
     modalRef: NgbModalRef;
     newCourse: CourseDto = new CourseDto();
+    registeredCourse: CourseDto = new CourseDto();
     classeNameNeedToReg: string;
     courses: CourseDto[] = [];
     registeredCourses: CourseDto[] = [];
@@ -92,6 +93,11 @@ export class HomeComponent implements OnInit {
         this.courses.splice(i, 1);
     }
 
+    dropRegisteredCourse(courseName, i) {
+        this.courseService.dropRegisteredCourse(courseName).subscribe();
+        this.registeredCourses.splice(i, 1);
+    }
+
     clearAllCourses() {
         this.courses = [];
     }
@@ -102,6 +108,7 @@ export class HomeComponent implements OnInit {
 
     registerCourse(courseName: string) {
         this.courseService.registerCourse(courseName).subscribe();
+        this.registeredCourses.push(this.registeredCourse);
     }
     // addCourseToStudent() {
     //     const courseName = 'temp';

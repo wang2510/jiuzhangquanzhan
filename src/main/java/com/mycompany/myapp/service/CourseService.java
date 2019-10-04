@@ -121,6 +121,21 @@ public class CourseService {
         }
     }
 
+    public void dropRegisteredClass(String courseName) throws Exception{
+        Optional<User> curUser = userService.getUserWithAuthorities();
+        Optional<Course> curCourse = courseRepository.findCourseByCourseName(courseName);
+        Optional<UserCourse> OptionalExistingCourse = userCourseRepository.findUserCourseByUserAndCourse(curUser.get(), curCourse.get());
+
+        if(!OptionalExistingCourse.isPresent()){
+            throw new Exception("Course is not exist.");
+        }
+
+        try {
+            userCourseRepository.delete(OptionalExistingCourse.get());
+        } catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
 
     public void updateCourse(CourseDto course) throws Exception{
         Optional<Course> OptionalExistingCourse = courseRepository.findCourseByCourseName(course.getCourseName());

@@ -15,6 +15,7 @@ export class CourseService {
     private addNewCourseUrl = SERVER_API_URL + '/api/course/addCourse';
     private registerCourseUrl = SERVER_API_URL + '/api/course/registerCourse';
     private registeredCoursesUrl = SERVER_API_URL + '/api/course/getRegisteredCourse';
+    private dropRegisteredCourseUrl = SERVER_API_URL + '/api/course/dropRegisteredCourse';
 
     constructor(private http: HttpClient) {}
 
@@ -33,6 +34,10 @@ export class CourseService {
 
     delete(courseName: String): Observable<Response> {
         return this.http.delete<Response>(`${this.courseDeleteUrl}/${courseName}`);
+    }
+
+    dropRegisteredCourse(courseName: String): Observable<Response> {
+        return this.http.delete<Response>(`${this.dropRegisteredCourseUrl}/${courseName}`);
     }
 
     registerCourse(courseName: String) {

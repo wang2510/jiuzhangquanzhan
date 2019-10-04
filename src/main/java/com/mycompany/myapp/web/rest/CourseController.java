@@ -119,6 +119,15 @@ public class CourseController {
         }
     }
 
+    @DeleteMapping(path = "/api/course/dropRegisteredCourse/{courseName}", produces = "application/json")
+    public HttpStatus dropRegisteredCourse(@NotNull @PathVariable("courseName") String courseName) {
+        try {
+            courseService.dropRegisteredClass(courseName);
+            return HttpStatus.OK;
+        } catch (Exception e) {
+            return HttpStatus.BAD_REQUEST;
+        }
+    }
 //    @PostMapping(path = "/api/course/addCourseToStudent/{courseName}", produces = "application/js")
 //    public HttpStatus addCourseToStudent(@NotNull @PathVariable("courseName") UserCourse userCourse) {
 //        try {
