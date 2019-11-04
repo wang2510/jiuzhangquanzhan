@@ -52,6 +52,7 @@ export class HomeComponent implements OnInit {
     }
 
     getAllCourses() {
+        debugger;
         this.courseService.getCourseInfo().subscribe(curDto => {
             if (!curDto) {
                 this.courses = [];
